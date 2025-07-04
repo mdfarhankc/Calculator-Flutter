@@ -18,7 +18,6 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
-  final ScrollController scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +110,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       );
     }
     return ListView.builder(
-      controller: scrollController,
+      controller: widget.scrollController,
       itemCount: history.length,
       itemBuilder: (context, index) {
         final item = history[index];

@@ -69,8 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
             // Keeps draggable behavior
             topRadius: Radius.circular(30),
             builder:
-                (context) =>
-                DraggableScrollableSheet(
+                (context) => DraggableScrollableSheet(
                   initialChildSize: 0.5,
                   minChildSize: 0.3,
                   maxChildSize: 0.9,
@@ -109,7 +108,33 @@ class _HomeScreenState extends State<HomeScreen> {
           onPressed: () {
             HapticFeedback.lightImpact();
             Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => SettingsScreen())
+              PageRouteBuilder(
+                pageBuilder:
+                    (context, animation, secondaryAnimation) =>
+                        SettingsScreen(),
+                transitionsBuilder: (
+                  context,
+                  animation,
+                  secondaryAnimation,
+                  child,
+                ) {
+                  // Example: Slide from Bottom Animation
+                  const begin = Offset(1.0, 0.0);
+                  const end = Offset.zero;
+                  const curve = Curves.ease;
+
+                  final tween = Tween(
+                    begin: begin,
+                    end: end,
+                  ).chain(CurveTween(curve: curve));
+                  final offsetAnimation = animation.drive(tween);
+
+                  return SlideTransition(
+                    position: offsetAnimation,
+                    child: child,
+                  );
+                },
+              ),
             );
           },
         ),
@@ -178,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     controller.expression.isEmpty ? '0' : controller.expression,
                     style: TextStyle(
                       color:
-                      widget.isDarkMode ? Colors.white70 : Colors.black87,
+                          widget.isDarkMode ? Colors.white70 : Colors.black87,
                       fontSize: 36,
                     ),
                   ),
@@ -202,18 +227,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               },
               child:
-              controller.hasResult
-                  ? Text(
-                controller.result,
-                key: ValueKey(controller.result),
-                style: TextStyle(
-                  color:
-                  widget.isDarkMode ? Colors.white : Colors.black,
-                  fontSize: 48,
-                  fontWeight: FontWeight.bold,
-                ),
-              )
-                  : const SizedBox.shrink(),
+                  controller.hasResult
+                      ? Text(
+                        controller.result,
+                        key: ValueKey(controller.result),
+                        style: TextStyle(
+                          color:
+                              widget.isDarkMode ? Colors.white : Colors.black,
+                          fontSize: 48,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                      : const SizedBox.shrink(),
             ),
           ),
           const SizedBox(height: 10),
@@ -222,13 +247,13 @@ class _HomeScreenState extends State<HomeScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children:
-              row.map((btn) {
-                return CalcButton(
-                  text: btn,
-                  isDarkMode: widget.isDarkMode,
-                  onTap: () => handleButtonTap(btn),
-                );
-              }).toList(),
+                  row.map((btn) {
+                    return CalcButton(
+                      text: btn,
+                      isDarkMode: widget.isDarkMode,
+                      onTap: () => handleButtonTap(btn),
+                    );
+                  }).toList(),
             ),
         ],
       ),
